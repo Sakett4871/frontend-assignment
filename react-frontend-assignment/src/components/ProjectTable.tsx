@@ -5,12 +5,14 @@ interface ProjectTableProps {
   tableData: TableData[];
   currentPage: number;
   itemsPerPage: number;
+  loading: boolean;
 }
 
 const ProjectTable: React.FC<ProjectTableProps> = ({
   tableData,
   currentPage,
   itemsPerPage,
+  loading,
 }) => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentTableData = tableData.slice(
@@ -28,13 +30,23 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
         </tr>
       </thead>
       <tbody>
-        {currentTableData.map((data) => (
-          <tr key={data["s.no"]}>
-            <td>{data["s.no"] + 1}</td>
-            <td>{data?.["percentage.funded"]}%</td>
-            <td>{data?.["amt.pledged"]}</td>
+        {loading ? (
+          <tr className="loader-row">
+            <td colSpan={3}>
+              <div className="overlay-loader">
+                <div className="loader"></div>
+              </div>
+            </td>
           </tr>
-        ))}
+        ) : (
+          currentTableData.map((data) => (
+            <tr key={data["s.no"]}>
+              <td>{data["s.no"] + 1}</td>
+              <td>{data?.["percentage.funded"]}%</td>
+              <td>{data?.["amt.pledged"]}</td>
+            </tr>
+          ))
+        )}
       </tbody>
     </table>
   );
